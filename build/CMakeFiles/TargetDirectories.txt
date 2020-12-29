@@ -1,3 +1,0 @@
-/home/pi/Dev/PIMonitor/build/CMakeFiles/rebuild_cache.dir
-/home/pi/Dev/PIMonitor/build/CMakeFiles/PIMonitor.dir
-/home/pi/Dev/PIMonitor/build/CMakeFiles/edit_cache.dir
