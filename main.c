@@ -10,7 +10,7 @@ void end_program (GtkWidget *wid, gpointer ptr)
     }
 
     //puts the dot in the temperature string
-    void dotString(char* str)
+void dotString(char* str)
     {   
         //make the free buffer data null  
         int length = strlen(str);
@@ -26,6 +26,18 @@ void end_program (GtkWidget *wid, gpointer ptr)
         str[length + 1] = '\0';
     }
 
+//reads the temperature into the string
+void readTemperature(char** string, int* len)
+{
+    FILE* tempFILE = fopen("/sys/class/thermal/thermal_zone0/temp","r");
+    if(tempFILE == NULL)
+    {
+         printf("COULD NOT OPEN TEMPERATURE FILE\n");
+    }
+        
+    getline(string,len,tempFILE);
+    fclose(tempFILE);
+}
 
 int update(unsigned char ** data)
     {
@@ -34,14 +46,8 @@ int update(unsigned char ** data)
         char* curTempString = (char*) data[1];
         char* minTempString = (char*) data[2];
         char* maxTempString = (char*) data[3];
-        FILE* tempFILE = fopen("/sys/class/thermal/thermal_zone0/temp","r");
-        if(tempFILE == NULL)
-        {
-            printf("COULD NOT OPEN TEMPERATURE FILE\n");
-        }
         int len = BUFFERSIZE;
-        getline(&curTempString,&len,tempFILE);
-       
+        readTemperature(&curTempString,&len);
         sscanf(curTempString,"%lu",&temps[0]);
         //check min temp
         if(temps[0] < temps[1])
@@ -65,7 +71,7 @@ int update(unsigned char ** data)
         dotString(curTempString);
         gtk_label_set_text((GtkWidget*)data[4],curTempString);
 
-        fclose(tempFILE);
+        
 
 
 
@@ -99,7 +105,7 @@ int main (int argc, char *argv[])
     gtk_table_attach_defaults(GTK_TABLE(table),maxText,3,4,0,1);
     //
     //Temp text
-    GtkWidget* tempText = gtk_label_new("Temp: ");
+    GtkWidget* tempText = gtk_label_new("Temp °C: ");
     gtk_table_attach_defaults(GTK_TABLE(table),tempText,0,1,1,2);
 
 
