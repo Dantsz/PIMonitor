@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(PIMonitor)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 include_directories(${GTK2_INCLUDE_DIRS})
