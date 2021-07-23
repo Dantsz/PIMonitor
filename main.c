@@ -9,9 +9,9 @@
 static double avg = 0.0f;
 static double reads  = 0.0f;
 
-void end_program (GtkWidget *wid, gpointer ptr)
+void end_program()
     {
-    gtk_main_quit ();
+      gtk_main_quit ();
     }
 
     //puts the dot in the temperature string
@@ -44,8 +44,9 @@ void readTemperature(char** string, size_t* len)
     fclose(tempFILE);
 }
 
-int update(unsigned char ** data)
+int update(void* arg)
     {
+        char** data = arg;
         ///
         unsigned long* temps = (unsigned long*)data[0];
         char* curTempString = (char*) data[1];
@@ -98,7 +99,7 @@ int main (int argc, char *argv[])
     gtk_init (&argc, &argv);
     GtkWidget* win = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     g_signal_connect (win, "delete_event", G_CALLBACK (end_program),NULL);
-    gtk_window_set_default_size(win , 300 ,50 );
+    gtk_window_set_default_size((GtkWindow*)win , 300 ,50 );
     GtkWidget* table = gtk_table_new(4,6,0);
 
 
@@ -137,8 +138,8 @@ int main (int argc, char *argv[])
     char* minTempString = malloc(BUFFERSIZE* sizeof(char));
     char* maxTempString = malloc(BUFFERSIZE * sizeof(char));
     char* avgTempString = malloc(BUFFERSIZE* sizeof(char));
-    
-    char** data[9] = {tempsInNumbers,curTempString,minTempString,maxTempString,curtemp,mintemp,maxtemp,avgTempString,avgtemp};
+    //not nice
+    char* data[9] = {(char*)tempsInNumbers,curTempString,minTempString,maxTempString,(char*)curtemp,(char*)mintemp,(char*)maxtemp,(char*)avgTempString,(char*)avgtemp};
     
     g_timeout_add_seconds(1.0, update, data);
     gtk_widget_show_all (win);
